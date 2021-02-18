@@ -14,13 +14,12 @@
   },
   "main": "main.js",
   "scripts": {
-    "dev": "webpack-dev-server --mode=development --content-base dist/",
-    "watch": "webpack --watch --progress --colors --display-modules",
+    "start": "imba -w server.imba",
+    "build": "imba build server.imba",
+    "dev": "imba -w server.imba",
+
     "test": "imba test/run.imba",
-    "build": "imba build.imba",
-    "compile": "imbac src",
-    "start": "yarn dev",
-    "dev-server": "nodemon --exec yarn run imba src/server/server.imba"
+    "compile": "imbac app"
   },
   "repository": {
     "type": "git",
@@ -30,7 +29,7 @@
   "dependencies": {
     "cheerio": "1.0.0-rc.3",
     "express": "^4.17.1",
-    "imba": "2.0.0-alpha.100",
+    "imba": "^2.0.0-alpha.127",
     "jszip": "^3.5.0",
     "knex": "^0.21.15",
     "multer": "^1.4.2",
@@ -53,6 +52,6 @@
     ]
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "@types/node": "^14.14.22"
   }
 }

@@ -219,9 +219,9 @@ export class DeckParser
 		return m[0] if m
 	
 	def setupExporter deck, workspace
-		const css = deck.style.replaceAll("'", '"')
+		const _css = deck.style.replaceAll("'", '"')
 		fs.mkdirSync(workspace)
-		fs.writeFileSync(path.join(workspace, 'deck_style.css'), css)
+		fs.writeFileSync(path.join(workspace, 'deck_style.css'), _css)
 		return new CustomExporter(self.first_deck_name, workspace)
 
 	def embedFile exporter, files, filePath
@@ -284,13 +284,13 @@ export class DeckParser
 			const v = dom(elem).html()
 			let used_index = false
 			for num of numbers
-				const old = "{num}<code>{v}</code>"
+				const old = `${num}<code>${v}</code>`
 				const newValue = '{{c'+(numbers.indexOf(num)+1)+'::'+v+'}}'
 				if mangle.includes(old)
 					used_index = true
 				mangle = mangle.replaceAll(old, newValue)
 			if not used_index
-				const old = "<code>{v}</code>"
+				const old = `<code>${v}</code>`
 				const newValue = '{{c'+(i+1)+'::'+v+'}}'
 				mangle = mangle.replaceAll(old, newValue)		
 
@@ -303,7 +303,7 @@ export class DeckParser
 		let answer = ''
 		underlines.each do |i, elem|
 			const v = dom(elem).html()
-			const old = "<strong>{v}</strong>"
+			const old = `<strong>${v}</strong>`
 			mangle = mangle.replaceAll(old, inline ? v : '{{type:Input}}')
 			answer = v
 		{mangle: mangle, answer: answer}
@@ -377,12 +377,12 @@ export class DeckParser
 					
 					if let audiofile = find_mp3_file(card.back)
 						if let newFileName = self.embedFile(exporter, self.files, global.decodeURIComponent(audiofile))
-							card.back += "[sound:{newFileName}]"
+							card.back += `[sound:${newFileName}]`
 							card.media.push(newFileName)
 
 					# Check YouTube
 					if let id = get_youtube_id(card.back)
-						const ytSrc = "https://www.youtube.com/embed/{id}?".replace(/"/, '')
+						const ytSrc = `https://www.youtube.com/embed/${id}?`.replace(/"/, '')
 						const video = "<iframe width='560' height='315' src='{ytSrc}' frameborder='0' allowfullscreen></iframe>"
 						card.back += video
 					if let soundCloudUrl = get_soundcloud_url(card.back)
@@ -401,7 +401,8 @@ export class DeckParser
 					card = self.locate_tags(card)
 
 				if self.settings['basic-reversed'] != 'false'
-						addThese.push({name: card.back, back: card.name, tags: card.tags, media: card.media, number: counter++})
+						const o = {name: card.back, back: card.name, tags: card.tags, media: card.media, number: counter++ }
+						addThese.push(o)
 				if self.settings['reversed'] != 'false'
 					const tmp = card.back
 					card.back = card.name
